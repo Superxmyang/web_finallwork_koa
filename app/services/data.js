@@ -105,6 +105,7 @@ module.exports = {
      * @returns 
      */
     async addAssignments(value){
+        
         let sql=`update settings set assignments_count=assignments_count+1`
         let res=await dbUtils.query(sql)
         if(res){
