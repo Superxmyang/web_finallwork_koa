@@ -22,8 +22,9 @@ module.exports = {
      */
     async getStudentById(ctx) {
         let id = ctx.query.id || ctx.cookies.get('id')
+        let isAdmin=ctx.cookies.get('isAdmin')
         if (!id) return ctx.body = failRes(null, "id不能为空");
-        let res = await data.getStudentById(id)
+        let res = await data.getStudentById(id,isAdmin)
         if (res) {
             return ctx.body = successRes(res, "获取信息成功");
         } else {

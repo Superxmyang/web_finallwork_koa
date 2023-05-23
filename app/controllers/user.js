@@ -15,7 +15,6 @@ module.exports = {
         }
         //校验是否为空
         if (!body.password) {
-
             return ctx.body = failRes(null, "密码不能为空");
         }
         //登录

@@ -5,8 +5,8 @@ module.exports = {
         if(ctx.cookies.get('isAdmin')){
             await next()
         }else{
-            ctx.status=401
-            return  ctx.body = failRes(null,"未登录");
+            ctx.status=403
+            return  ctx.body = failRes(null,"你不是管理员");
         }
     },
 

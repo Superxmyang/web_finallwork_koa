@@ -1,4 +1,4 @@
-FROM nginx:lastest
+FROM node:lastest
 
 COPY . /app
 

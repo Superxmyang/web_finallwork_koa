@@ -24,7 +24,7 @@ const user = {
      * @returns 成功返回对象，失败返回空
      */
     async register(options) {
-        let _sql = `insert into user (username,pwd,nick_name) values ("${options.username}","${options.password}","${options.nickname}");`
+        let _sql = `insert into user (username,pwd,nick_name,avatar) values ("${options.username}","${options.password}","${options.nickname}","https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png");`
         let res = await dbUtils.query(_sql)
         console.log('register', res);
         //初始化userscore数据
@@ -143,7 +143,7 @@ const user = {
      * @param {object} body 
      */
     async changeUserInfo(id,body){
-        let _sql = `update user set email="${body.email}" ,phone="${body.phone}",avatar="${body.avatar}" where id="${id}";`
+        let _sql = `update user set email="${body.email || ''}" ,phone="${body.phone || ''}",avatar="${body.avatar}" where id="${id}";`
         let res = await dbUtils.query(_sql)
         if(res){
             return res

@@ -1,3 +1,4 @@
+const { isAdmin } = require('../middleware/isAdmin.js')
 const dbUtils = require('../utils/db-utils.js')
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
      * 通过id获取学生信息
      * @param {*} id 
      */
-    async getStudentById(id) {
+    async getStudentById(id,isAdmin) {
         let sql=`SELECT daily_score,nick_name as nickname,examination_score,middle_score,review_score, assignments_score ,avatar from user left join userscore u on user.id = u.user_id
         left join (
            SELECT user_id, avg(score) assignments_score
@@ -50,6 +51,26 @@ module.exports = {
         let sql2=`select id, times_number as time ,score from assignments where user_id=${id} order by times_number asc ;`
         let res2 = await dbUtils.query(sql2)
         obj.assignments=res2 || []
+
+        
+        if(!isAdmin){
+            let sql3=`select * from settings`
+            let res3=await dbUtils.query(sql3)
+            if(!res3){
+                return null
+            }
+            let daily_score=res3[0]['daily_score']
+            let examination_score=res3[0]['examination_score']
+            let middle_score=res3[0]['middle_score']
+            let review_score=res3[0]['review_score']
+            let assignments_score=res3[0]['assignments_score']
+            let show_examination=res3[0]['show_examination']
+            obj.totalScore=(daily_score*obj.daily_score+examination_score*obj.examination_score+middle_score*obj.middle_score+review_score*obj.review_score+assignments_score*obj.assignments_score)/100
+            obj.totalScore=obj.totalScore.toFixed(2)
+            if(!show_examination){
+                obj.examination_score=0
+            }
+        }
         return obj
     },
     /**
