@@ -22,9 +22,9 @@ module.exports = {
      */
     async getStudentById(ctx) {
         let id = ctx.query.id || ctx.cookies.get('id')
-        let isAdmin=ctx.cookies.get('isAdmin')
+        let isAdmin = ctx.cookies.get('isAdmin')
         if (!id) return ctx.body = failRes(null, "id不能为空");
-        let res = await data.getStudentById(id,isAdmin)
+        let res = await data.getStudentById(id, isAdmin)
         if (res) {
             return ctx.body = successRes(res, "获取信息成功");
         } else {
@@ -69,26 +69,96 @@ module.exports = {
      * 获取全部学生的平均成绩
      * @param {*} ctx 
      */
-    async getAverage(ctx){
-        let res= await data.getAverage()
-        if(res){
-            return ctx.body = successRes(res,"获取平均成绩成功")
-        }else{
-            return ctx.body.failRes(null,"获取平均成绩失败")
+    async getAverage(ctx) {
+        let res = await data.getAverage()
+        if (res) {
+            return ctx.body = successRes(res, "获取平均成绩成功")
+        } else {
+            return ctx.body.failRes(null, "获取平均成绩失败")
         }
     },
     /**
      * 
      */
-    async addAssignments(ctx){
-        let body=ctx.request.body
-        if(!body.value) return ctx.body=failRes(null,"作业不能为空")
+    async addAssignments(ctx) {
+        let body = ctx.request.body
+        if (!body.value) return ctx.body = failRes(null, "作业不能为空")
         console.log(body.value);
-        let res=await data.addAssignments(body.value)
-        if(res){
-            return ctx.body=successRes(null,"添加成功")
-        }else{
-            return ctx.body=failRes(null,"添加失败")
+        let res = await data.addAssignments(body.value)
+        if (res) {
+            return ctx.body = successRes(null, "添加成功")
+        } else {
+            return ctx.body = failRes(null, "添加失败")
         }
+    },
+
+    async getMachineList(ctx) {
+        let res = await data.getMachineList(ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "获取成功")
+        }
+    },
+
+    async bookingMachine(ctx) {
+        let id = ctx.cookies.get('id')
+        let res = await data.bookingMachine(id, ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "修改成功")
+        } else {
+            return ctx.body = failRes(null, "添加失败,此时间段已被预约")
+        }
+    },
+
+    async getAllCourse(ctx) {
+        let res = await data.getAllCourse(ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "获取成功")
+        }
+        return ctx.body = failRes(null, "获取失败")
+    },
+
+    async bookingCourse(ctx) {
+        let res = await data.bookingCourse(ctx.cookies.get('id'), ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "更改预约状态成功")
+        }
+        return ctx.body = failRes(null, "预约失败,此时间段已被预约")
+    },
+    async getAllBookingCourse(ctx) {
+        let res = await data.getAllBookingCourse(ctx.cookies.get('id'))
+        if (res) {
+            return ctx.body = successRes(res, "获取成功")
+        }
+        return ctx.body = failRes(null, "获取失败")
+    },
+    async getAllBookingMachine(ctx) {
+        let res = await data.getAllBookingMachine(ctx.cookies.get('id'))
+        if (res) {
+            return ctx.body = successRes(res, "获取成功")
+        }
+        return ctx.body = failRes(null, "获取失败")
+    },
+    async getPlan(ctx){
+        let res = await data.getPlan(ctx.cookies.get('id'))
+        if (res) {
+            return ctx.body = successRes(res, "获取成功")
+        }
+        return ctx.body = failRes(null, "获取失败")
+    },
+    async bookingPlan(ctx){
+        let res = await data.bookingPlan(ctx.cookies.get('id'),ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "添加计划成功")
+        }
+        return ctx.body = failRes(null, "预约失败,此时间段已被预约")
+    },
+    async updatePlan(ctx){
+        let res = await data.updatePlan(ctx.cookies.get('id'),ctx.request.body)
+        if (res) {
+            return ctx.body = successRes(res, "更改计划成功")
+        }
+        return ctx.body = failRes(null, "更改计划失败,有时间重复")
     }
+
+
 }
